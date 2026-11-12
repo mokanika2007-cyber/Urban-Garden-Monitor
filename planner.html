@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planner view | Urban Garden Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <strong>Urban Garden Monitor</strong>
+    <nav>
+      <a href="index.html">Live garden</a>
+      <a href="planner.html" aria-current="page">Planner view</a>
+      <a href="index.html#resilience">When things fail</a>
+      <a href="index.html#build">How it works</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>See which gardens are thriving, and which need help.</h1>
+    <p>The yield index combines moisture stability, pH fit and logged harvests. Shade and water use come from the urban planning layer.</p>
+  </div>
+
+  <main class="panel">
+    <div class="bar" style="margin-top:0">
+      <label for="sort">Sort gardens by</label>
+      <select id="sort">
+        <option value="yield">Yield index</option>
+        <option value="beds">Number of beds</option>
+        <option value="name">Name</option>
+      </select>
+    </div>
+    <p id="summary" style="color:var(--mute);margin:0"></p>
+    <div class="planner" id="prows"></div>
+  </main>
+
+  <footer>Sample data for five gardens. Connect <code>Garden.sites</code> in data.js to your API to show real results.</footer>
+</div>
+<script src="data.js"></script>
+<script src="planner.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urban Garden Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <strong>Urban Garden Monitor</strong>
+    <nav>
+      <a href="index.html" aria-current="page">Live garden</a>
+      <a href="planner.html">Planner view</a>
+      <a href="#resilience">When things fail</a>
+      <a href="#build">How it works</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Know what every bed needs before you pick up the watering can.</h1>
+    <p>Soil sensors, local weather and city land data in one view. Gardeners get a plain next step for each plot. Planners see which gardens are thriving.</p>
+  </div>
+
+  <main>
+    <div class="bar"><span class="chip" id="wx"></span><span class="chip" id="health"></span></div>
+    <div id="rainBanner" class="banner" hidden>Heavy rain is forecast this evening. Watering advice is paused for beds that are already in range.</div>
+
+    <div class="stage">
+      <div>
+        <div class="beds" id="beds" role="group" aria-label="Garden beds"></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--okbg)"></i>In range</span>
+          <span><i class="dot" style="background:var(--warnbg)"></i>Needs attention</span>
+          <span><i class="dot" style="background:var(--offbg)"></i>Sensor offline, estimated</span>
+        </div>
+      </div>
+      <div class="panel" aria-live="polite">
+        <h3 id="dTitle"></h3>
+        <div class="stats">
+          <div><small>Soil moisture</small><strong id="sM"></strong></div>
+          <div><small>Soil pH</small><strong id="sP"></strong></div>
+          <div><small>Temperature</small><strong id="sT"></strong></div>
+        </div>
+        <div class="rec" id="rec"></div>
+        <small style="color:var(--mute)">Soil moisture, last 24 readings. The shaded band is the target for this crop.</small>
+        <svg class="chart" id="chart" viewBox="0 0 320 120" role="img" aria-label="Soil moisture trend"></svg>
+      </div>
+    </div>
+  </main>
+
+  <section id="resilience">
+    <h2>When things fail, the garden view stays useful</h2>
+    <p>Try breaking it. Each button simulates a real fault and shows how the system responds.</p>
+    <div class="tests">
+      <button class="act" id="t1">Drop the selected sensor</button>
+      <button class="act" id="t2">Take the weather API down</button>
+      <button class="act" id="t3">Send an impossible pH reading</button>
+    </div>
+    <div class="panel"><ul class="log" id="log" aria-live="polite"><li><time>now</time>Everything is running normally. Pick a fault above.</li></ul></div>
+  </section>
+
+  <section id="build">
+    <h2>How the data travels</h2>
+    <p>Each stage is a small service, so one failing part never takes the dashboard down.</p>
+    <ol class="flow">
+      <li><b>Sensor nodes</b><span>Soil moisture, temperature and pH. Each node stores readings locally if the network drops.</span></li>
+      <li><b>MQTT broker</b><span>Receives readings over a lightweight protocol built for unreliable connections.</span></li>
+      <li><b>Ingestion service</b><span>Checks ranges, removes outliers, flags gaps and fills short ones by interpolation.</span></li>
+      <li><b>MongoDB time-series store</b><span>Keeps raw readings for recent weeks and hourly averages beyond that.</span></li>
+      <li><b>Analytics service</b><span>Rule-based advice per crop today, with a model trained on logged harvests as data grows.</span></li>
+      <li><b>Weather and city data service</b><span>Caches the last good response, retries with backoff and switches to a backup provider.</span></li>
+      <li><b>Flask API with live updates</b><span>Serves this dashboard and pushes changes as they arrive.</span></li>
+    </ol>
+  </section>
+
+  <footer>Prototype with simulated sensor values. In the full system these screens read from the Flask API.</footer>
+</div>
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
